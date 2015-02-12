@@ -47,6 +47,8 @@ abstract class :xhp {
   final protected static function renderChild($child) {
     if ($child instanceof :xhp) {
       return $child->toString();
+    } else if ($child instanceof HTML) {
+      return $child->getRawHTML();
     } else if (is_array($child)) {
       throw new XHPRenderArrayException('Can not render array!');
     } else {
@@ -683,6 +685,12 @@ abstract class :x:composable-element extends :x:base {
     $ii = 0;
     if (!$this->validateChildrenExpression($decl, $ii) ||
         $ii < count($this->children)) {
+          
+      if (isset($this->children[$ii])
+        && $this->children[$ii] instanceof HTML) {
+        return;
+      }
+      
       throw new XHPInvalidChildrenException($this, $ii);
     }
   }
